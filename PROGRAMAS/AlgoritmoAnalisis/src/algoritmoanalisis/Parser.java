@@ -19,26 +19,51 @@ public class Parser {
     }
     
     void expr() throws IOException{
-        term();
+        factor();
         while(true){
             if (lookahead == '+') {
-                match('+'); term(); System.out.write('+');
+                match('+'); factor(); System.out.write('+');
             } else if (lookahead == '-'){
-                match('-'); term(); System.out.write('-');
+                match('-'); factor(); System.out.write('-');
             }
             else return;
         }
     }
     
-    void term () throws IOException{
-        if(Character.isDigit((char)lookahead)){
-            System.out.write((char)lookahead);
-            match(lookahead);
+  public void factor() throws IOException {
+        atom();
+        while (true) {
+            if (lookahead == '*') {
+                match('*');
+                atom();
+                System.out.write('*');
+            } else if (lookahead == '/') {
+                match('/');
+                atom();
+                System.out.write('/');
+            } else {
+                return;
+            }
         }
     }
     
+   public void atom() throws IOException {
+        if (Character.isDigit((char) lookahead)) {
+            System.out.write((char) lookahead);
+            match(lookahead);
+        } else {
+            throw new Error("syntax error");
+        }
+    }
+  
      void match(int t) throws IOException{
         if(lookahead == t) lookahead = System.in.read();
         else throw new Error("syntax error");
     }
+     
+    
+
+   
+     
+    
 }
